@@ -1,18 +1,18 @@
-from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
+import backend.service.views as service
 
 
-def get_all_spendings(request):
-    return True
+def get_all_spendings():
+    return service.get_all_spendings_from_db_handler()
 
 
 def new_spending(request):
-    return True
+    return service.new_spending_to_db_handler(request)
 
 
 def order_spendings(request):
-    return True
+    return service.order_spendings_from_db_handler(request)
 
 
 def filter_by_currency(request):
-    return True
+    return service.filter_by_currency_from_db_handler(request)
