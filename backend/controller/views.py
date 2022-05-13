@@ -1,8 +1,7 @@
-from django.http import HttpResponse, JsonResponse
-import backend.service.views as service
+from . import service
 
 
-def get_all_spendings():
+def get_all_spendings(request):
     return service.get_all_spendings_from_db_handler()
 
 
