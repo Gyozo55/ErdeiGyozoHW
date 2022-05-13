@@ -11,7 +11,7 @@ def create_new_spending(description, amount, spent_at, currency):
                  currency=currency).save()
 
 
-def order_data_by_spendings(order_type):
+def order_spendings(order_type):
     return SpendingList.objects.order_by(f'{order_type}').values()
 
 

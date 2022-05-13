@@ -1,24 +1,31 @@
-from django.core.serializers.json import DjangoJSONEncoder
-from django.db import models
-from django.db.models import QuerySet
-from django.http.response import JsonResponse, HttpResponse
+import json
+from django.http.response import JsonResponse
 from datetime import datetime
-
 from . import databaseHandler
-from django.core.serializers import serialize
-
-from django.core.serializers.json import DjangoJSONEncoder
-
-
 from django.core import serializers
 
 
+# Convert to Json
+def convert_data_to_valid_json(data):
+    serialized_data = json.loads(serializers.serialize('json', data))
+    dict_response = {}
+
+    for row in serialized_data:
+        id = row.get("pk")
+        content = row.get("fields")
+        dict_response.update({id: content})
+
+    return dict_response
+
+
+# All Spending
 def get_all_spendings_from_db_handler():
     spendings_from_db = databaseHandler.get_all_spendings_from_db()
-    print(dir(spendings_from_db))
-    return HttpResponse(serializers.serialize('json', spendings_from_db), content_type='application/json')
+    json_data = convert_data_to_valid_json(spendings_from_db)
+    return JsonResponse(json_data)
 
 
+# New Spending
 def new_spending_to_db_handler(request):
     description = request.GET.get('description')
     amount = request.GET.get('amount')
@@ -28,6 +35,7 @@ def new_spending_to_db_handler(request):
     databaseHandler.create_new_spending(description, amount, spent_at, currency)
 
 
+# Order
 def asc_or_desc(order_type, order):
     if order.equals('ASC'):
         return f'{order_type}'
@@ -41,18 +49,25 @@ def order_spendings_from_db_handler(request):
     order = request.GET.get('order')
 
     if order_type.equals('date'):
-        return JsonResponse(databaseHandler.order_data_by_spendings(asc_or_desc('spent_at', order)),
-                            encoder=DjangoJSONEncoder)
+        order_data_by_date = databaseHandler.order_spendings(asc_or_desc('spent_at', order))
+        json_data = convert_data_to_valid_json(order_data_by_date)
+        return JsonResponse(json_data)
 
     if order_type.equals('amount'):
-        return JsonResponse(databaseHandler.order_data_by_spendings(asc_or_desc('amount', order)),
-                            encoder=DjangoJSONEncoder)
+        order_data_by_amount = databaseHandler.order_spendings(asc_or_desc('amount', order))
+        json_data = convert_data_to_valid_json(order_data_by_amount)
+        return JsonResponse(json_data)
 
 
+# Filter
 def filter_by_currency_from_db_handler(request):
     filter_type = request.GET.get('filter_type')
 
     if filter_type.equals('ALL'):
-        return JsonResponse(databaseHandler.get_all_spendings_from_db(), encoder=DjangoJSONEncoder)
+        from_db = databaseHandler.get_all_spendings_from_db()
+        json_data = convert_data_to_valid_json(from_db)
+        return JsonResponse(json_data)
 
-    return JsonResponse(databaseHandler.filter_data_by_currency(f'{filter_type}'), encoder=DjangoJSONEncoder)
+    filter_data_by_currency = databaseHandler.filter_data_by_currency(f'{filter_type}')
+    json_data = convert_data_to_valid_json(filter_data_by_currency)
+    return JsonResponse(json_data)
