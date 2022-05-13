@@ -5,8 +5,8 @@ def get_all_spendings_from_db():
     return SpendingList.objects.all()
 
 
-def create_new_spending(description, amount, spent_at, currency):
-    SpendingList(description=description, amount=amount, spent_at=spent_at,
+def create_new_spending(description, amount, currency):
+    SpendingList(description=description, amount=amount,
                  currency=currency).save()
 
 

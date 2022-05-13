@@ -1,6 +1,5 @@
 import json
 from django.http.response import JsonResponse
-from datetime import datetime
 from . import databaseHandler
 from django.core import serializers
 
@@ -29,10 +28,9 @@ def get_all_spendings_from_db_handler():
 def new_spending_to_db_handler(request):
     description = request.GET.get('description')
     amount = request.GET.get('amount')
-    spent_at = datetime.now()
     currency = request.GET.get('currency')
 
-    databaseHandler.create_new_spending(description, amount, spent_at, currency)
+    databaseHandler.create_new_spending(description, amount, currency)
 
 
 # Order
