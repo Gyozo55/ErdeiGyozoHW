@@ -37,23 +37,23 @@ def new_spending_to_db_handler(request):
 
 # Order
 def asc_or_desc(order_type, order):
-    if order.equals('ASC'):
+    if order == 'ASC':
         return f'{order_type}'
 
-    if order.equals('DESC'):
+    if order == 'DESC':
         return f'-{order_type}'
 
 
 def order_spendings_from_db_handler(request):
-    order_type = request.GET.get('order_type')
+    order_type = request.GET.get('order-type')
     order = request.GET.get('order')
 
-    if order_type.equals('date'):
+    if order_type == 'date':
         order_data_by_date = databaseHandler.order_spendings(asc_or_desc('spent_at', order))
         json_data = convert_data_to_valid_json(order_data_by_date)
         return JsonResponse(json_data)
 
-    if order_type.equals('amount'):
+    if order_type == 'amount':
         order_data_by_amount = databaseHandler.order_spendings(asc_or_desc('amount', order))
         json_data = convert_data_to_valid_json(order_data_by_amount)
         return JsonResponse(json_data)
@@ -61,9 +61,9 @@ def order_spendings_from_db_handler(request):
 
 # Filter
 def filter_by_currency_from_db_handler(request):
-    filter_type = request.GET.get('filter_type')
+    filter_type = request.GET.get('filter-type')
 
-    if filter_type.equals('ALL'):
+    if filter_type == 'ALL':
         from_db = databaseHandler.get_all_spendings_from_db()
         json_data = convert_data_to_valid_json(from_db)
         return JsonResponse(json_data)

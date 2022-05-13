@@ -1,4 +1,3 @@
-# from models import SpendingList
 from .models import SpendingList
 
 
@@ -12,8 +11,8 @@ def create_new_spending(description, amount, spent_at, currency):
 
 
 def order_spendings(order_type):
-    return SpendingList.objects.order_by(f'{order_type}').values()
+    return SpendingList.objects.order_by(f'{order_type}')
 
 
 def filter_data_by_currency(filter_type):
-    return SpendingList.objects.filter(curreancy=filter_type).all().values()
+    return SpendingList.objects.filter(currency=filter_type).all()
