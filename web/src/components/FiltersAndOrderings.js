@@ -1,9 +1,9 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import { FiltersWrapper, Orderings, CurrencyFilters, CurrencyButton } from '../styles/ComponentStyles';
 
-export default function CurrencyFilter({
-}) {
+export default function CurrencyFilter({ spendings, setSpendings }) {
+
 
   return (
     <>
