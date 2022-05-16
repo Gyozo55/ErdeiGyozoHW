@@ -33,22 +33,22 @@ class NewSpendingView(APIView):
 
 class OrderSpendings(APIView):
 
-    def asc_or_desc(self, order_type, order):
-        if order == 'ASC':
-            return f'{order_type}'
+    def asc_or_desc(self, order_name, order_type):
+        if order_type == 'ASC':
+            return f'{order_name}'
 
-        if order == 'DESC':
-            return f'-{order_type}'
+        if order_type == 'DESC':
+            return f'-{order_name}'
 
     def get(self, request):
+        order_name = request.GET.get('order-name')
         order_type = request.GET.get('order-type')
-        order = request.GET.get('order')
-        if order_type == 'date':
-            data = SpendingList.objects.order_by(f'{self.asc_or_desc("spent_at", order)}')
+        if order_name == 'date':
+            data = SpendingList.objects.order_by(f'{self.asc_or_desc("spent_at", order_type)}')
             return Response(json.loads(serializers.serialize('json', data)), status=status.HTTP_200_OK)
 
-        if order_type == 'amount':
-            data = SpendingList.objects.order_by(f'{self.asc_or_desc("amount", order)}')
+        if order_name == 'amount':
+            data = SpendingList.objects.order_by(f'{self.asc_or_desc("amount", order_type)}')
             return Response(json.loads(serializers.serialize('json', data)), status=status.HTTP_200_OK)
 
         return Response({'Bad Request': 'Invalid data...'}, status=status.HTTP_400_BAD_REQUEST)

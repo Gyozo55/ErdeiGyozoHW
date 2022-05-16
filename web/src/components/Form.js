@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { InputStyles } from '../styles/InputStyles';
 import { SelectStyles } from '../styles/SelectStyles';
 import { FormStyles } from '../styles/ComponentStyles';
+import {render} from "react-dom";
 
-export default function Form() {
+export default function Form({ spendings, setSpendings }) {
   const [state, setState] = useState({
     description: '',
     amount: 0,
@@ -31,6 +32,7 @@ export default function Form() {
     };
     fetch("/api/new-spending", requestOptions)
       .then((response) => response.json())
+        .then()
   }
 
 
