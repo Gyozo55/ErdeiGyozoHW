@@ -29,9 +29,9 @@ export default function SpendingList({ spendings, setSpendings }) {
         };
       })
       .then((response) => {
-        // if (response.status === 200) {
+        if (response.status === 200) {
           setSpendings(response.body);
-        // }
+        }
       })
       .catch((err) => {
         console.error(err);
