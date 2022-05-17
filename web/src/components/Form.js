@@ -19,17 +19,20 @@ export default function Form({ setUrl }) {
   }
 
   function checkFields() {
-    if (state.description === '') {
+    if (state.description === '' && state.amount > 0) {
       alert('Invalid Description: Please try again!')
     }
-    if (state.amount === 0) {
+    if (state.amount === 0 && state.description !== '') {
       alert('Invalid Amount: Please try again!')
+    }
+    if(state.amount === 0 && state.description === ''){
+      alert('Invalid Inputs: Please try again!')
     }
   }
 
   function saveNewSpendingInApi(e) {
-    checkFields()
     e.preventDefault()
+    checkFields()
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -39,7 +42,8 @@ export default function Form({ setUrl }) {
         currency: state.currency
       }),
     };
-    fetch("/api/new-spending", requestOptions)
+    if(state.description !== '' && state.amount > 0){
+      fetch("/api/new-spending", requestOptions)
       .then((response) => response.json())
         .then(setState({
             description: '',
@@ -47,6 +51,13 @@ export default function Form({ setUrl }) {
             currency: 'USD',
         }))
         .then(setUrl(`http://localhost:8000/api/get-all-spendings`))
+    }else {
+      setState({
+        description: '',
+        amount: 0,
+        currency: 'USD',
+      })
+    }
   }
 
 
