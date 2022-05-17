@@ -15,7 +15,6 @@ export default function App() {
           setSpendings={setSpendings}
         />
         <FiltersAndOrderings
-          spendings={spendings}
           setSpendings={setSpendings}
         />
         <SpendingList
