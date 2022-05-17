@@ -32,31 +32,6 @@ export default function CurrencyFilter({ setSpendings, setUrl }) {
     setFilterState(e.target.name)
   }
 
-  // async function getOrderedSpendings() {
-  //   console.log(orderState.type)
-  //   console.log(orderState.name)
-  //   const url = `http://localhost:8000/api/order-spendings?order-type=${orderState.value}&order-name=${orderState.name}`
-  //   setUrl(url)
-  //   // await fetchDataFromApiWithGet(url)
-  // }
-  //
-  // async function getFilteredSpendings() {
-  //   console.log(filterState)
-  //   const url = `http://localhost:8000/api/filter-by-currency?filter-type=${filterState}`
-  //   setUrl(url)
-  //   // await fetchDataFromApiWithGet(url)
-  // }
-  //
-  // async function fetchDataFromApiWithGet(url){
-  //   const requestOptions = {
-  //     method: "GET",
-  //     headers: { "Content-Type": "application/json" }};
-  //
-  //   await fetch(url, requestOptions)
-  //     .then((response) => response.json())
-  //       .then(data => setSpendings(data))
-  // }
-
   return (
     <>
       <FiltersWrapper>
