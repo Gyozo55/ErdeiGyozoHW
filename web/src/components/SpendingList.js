@@ -22,20 +22,15 @@ export default function SpendingList({ spendings, setSpendings, url }) {
       headers: { "Content-Type": "application/json" },
     })
       .then(async (res) => {
-        console.log(url)
         const body = await res.json();
-
-        console.log(body)
         return {
           status: res.status,
           body,
         };
       })
       .then((response) => {
-        console.log(response)
         if (response.status === 200) {
           setSpendings(response.body);
-          console.log(spendings.length)
         }
       })
       .catch((err) => {
