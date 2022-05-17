@@ -4,7 +4,7 @@ import { SelectStyles } from '../styles/SelectStyles';
 import { FormStyles } from '../styles/ComponentStyles';
 import {render} from "react-dom";
 
-export default function Form({ spendings, setSpendings, setUrl }) {
+export default function Form({ setUrl }) {
   const [state, setState] = useState({
     description: '',
     amount: 0,
@@ -19,7 +19,14 @@ export default function Form({ spendings, setSpendings, setUrl }) {
     });
   }
 
+  function checkFields() {
+      if(state.description === '' || state.amount === 0){
+        alert('Invalid Input: Please try again!')
+      }
+    }
+
   function saveNewSpendingInApi(e) {
+    checkFields()
     e.preventDefault()
     const requestOptions = {
       method: "POST",
