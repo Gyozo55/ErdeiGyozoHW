@@ -34,21 +34,13 @@ class NewSpendingView(APIView):
 class OrderSpendings(APIView):
 
     def get(self, request):
-        order_name = request.GET.get('order-name')
         order_type = request.GET.get('order-type')
-        if order_name == 'date':
-            data = SpendingList.objects.order_by(f'{self.asc_or_desc("spent_at", order_type)}')
-            return Response(convert_data_to_valid_json(data), status=status.HTTP_200_OK)
 
-        if order_name == 'amount':
-            data = SpendingList.objects.order_by(f'{self.asc_or_desc("amount", order_type)}')
+        if len(order_type) > 0:
+            data = SpendingList.objects.order_by(f'{order_type}')
             return Response(convert_data_to_valid_json(data), status=status.HTTP_200_OK)
 
         return Response({'Bad Request': 'Invalid data...'}, status=status.HTTP_400_BAD_REQUEST)
-
-
-def convert_data_to_valid_json(data):
-    return convert_data_to_valid_json(data)
 
 
 class FilterByCurrency(APIView):
@@ -77,11 +69,3 @@ def convert_data_to_valid_json(data):
         result.append(content)
 
     return result
-
-
-def asc_or_desc(order_name, order_type):
-    if order_type == 'ASC':
-        return f'{order_name}'
-
-    if order_type == 'DESC':
-        return f'-{order_name}'
