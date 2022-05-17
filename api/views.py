@@ -33,23 +33,12 @@ class NewSpendingView(APIView):
 
 class OrderSpendings(APIView):
 
-    def asc_or_desc(self, order_type, order):
-        if order == 'ASC':
-            return f'{order_type}'
-
-        if order == 'DESC':
-            return f'-{order_type}'
-
     def get(self, request):
         order_type = request.GET.get('order-type')
-        order = request.GET.get('order')
-        if order_type == 'date':
-            data = SpendingList.objects.order_by(f'{self.asc_or_desc("spent_at", order)}')
-            return Response(json.loads(serializers.serialize('json', data)), status=status.HTTP_200_OK)
 
-        if order_type == 'amount':
-            data = SpendingList.objects.order_by(f'{self.asc_or_desc("amount", order)}')
-            return Response(json.loads(serializers.serialize('json', data)), status=status.HTTP_200_OK)
+        if len(order_type) > 0:
+            data = SpendingList.objects.order_by(f'{order_type}')
+            return Response(convert_data_to_valid_json(data), status=status.HTTP_200_OK)
 
         return Response({'Bad Request': 'Invalid data...'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -60,10 +49,23 @@ class FilterByCurrency(APIView):
         filter_type = request.GET.get('filter-type')
 
         if filter_type == 'ALL':
-            return Response(SpendingSerializer(SpendingList.objects.all()), status=status.HTTP_200_OK)
+            return Response(convert_data_to_valid_json(SpendingList.objects.all()), status=status.HTTP_200_OK)
 
         if filter_type == 'HUF' or filter_type == 'USD':
             data = SpendingList.objects.filter(currency=filter_type).all()
-            return Response(json.loads(serializers.serialize('json', data)), status=status.HTTP_200_OK)
+            return Response(convert_data_to_valid_json(data), status=status.HTTP_200_OK)
 
         return Response({'Bad Request': 'Invalid data...'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+def convert_data_to_valid_json(data):
+    serialized_data = json.loads(serializers.serialize('json', data))
+    result = []
+
+    for row in serialized_data:
+        id = row.get("pk")
+        content = row.get("fields")
+        content.update({'id': id})
+        result.append(content)
+
+    return result

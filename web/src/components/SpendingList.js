@@ -11,13 +11,13 @@ import {
   AmountWrapper,
 } from "../styles/ComponentStyles";
 
-export default function SpendingList({ spendings, setSpendings }) {
+export default function SpendingList({ spendings, setSpendings, url }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
   useEffect(() => {
     setLoading(true);
-    fetch(`http://localhost:8000/api/get-all-spendings`, {
+    fetch(url, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     })
@@ -40,7 +40,7 @@ export default function SpendingList({ spendings, setSpendings }) {
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [url]);
 
   if (loading) return <Loader />;
 

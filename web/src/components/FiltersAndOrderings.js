@@ -1,25 +1,45 @@
-import React from 'react';
-
+import React, {useEffect, useState} from 'react';
 import { FiltersWrapper, Orderings, CurrencyFilters, CurrencyButton } from '../styles/ComponentStyles';
 
-export default function CurrencyFilter({
-}) {
+
+export default function CurrencyFilter({ setUrl }) {
+
+  const [orderState, setOrderState] = useState('-spent_at');
+
+  const [filterState, setFilterState] = useState('ALL');
+
+  useEffect ( ()=>{
+    setUrl(`http://localhost:8000/api/filter-by-currency?filter-type=${filterState}`)
+  }, [filterState])
+
+  useEffect ( ()=>{
+    setUrl(`http://localhost:8000/api/order-spendings?order-type=${orderState}`)
+  }, [orderState])
+
+  function handleSortingChange(e) {
+    setOrderState(e.target.value)
+  }
+
+  function handleFilterChange(e) {
+    setFilterState(e.target.name)
+  }
 
   return (
     <>
       <FiltersWrapper>
         <Orderings>
-          <select>
-            <option value='-date'>Sort by Date descending (default)</option>
-            <option value='date'>Sort by Date ascending</option>
-            <option value='-amount_in_huf'>Sort by Amount descending</option>
-            <option value='amount_in_huf'>Sort by Amount ascending</option>
+          <select onChange={handleSortingChange}>
+            <option title='date' value='-spent_at'>Sort by Date descending (default)</option>
+            <option title='date' value='spent_at'>Sort by Date ascending</option>
+            <option title='amount' value='-amount'>Sort by Amount descending</option>
+            <option title='amount' value='amount'>Sort by Amount ascending</option>
           </select>
         </Orderings>
         <CurrencyFilters>
           <li>
             <CurrencyButton
-              name=''
+              name='ALL'
+              onClick={handleFilterChange}
             >
               ALL
             </CurrencyButton>
@@ -27,6 +47,7 @@ export default function CurrencyFilter({
           <li>
             <CurrencyButton
               name='HUF'
+              onClick={handleFilterChange}
             >
               HUF
             </CurrencyButton>
@@ -34,6 +55,7 @@ export default function CurrencyFilter({
           <li>
             <CurrencyButton
               name='USD'
+              onClick={handleFilterChange}
             >
               USD
             </CurrencyButton>

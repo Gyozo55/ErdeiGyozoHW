@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { InputStyles } from '../styles/InputStyles';
 import { SelectStyles } from '../styles/SelectStyles';
 import { FormStyles } from '../styles/ComponentStyles';
+import {render} from "react-dom";
 
-export default function Form() {
+export default function Form({ setUrl }) {
   const [state, setState] = useState({
     description: '',
     amount: 0,
@@ -12,12 +13,36 @@ export default function Form() {
 
   function handleChange(e) {
     const { name, value } = e.target;
-
     setState({
       ...state,
       [name]: value,
     });
   }
+
+  function checkFields() {
+      if(state.description === '' || state.amount === 0){
+        alert('Invalid Input: Please try again!')
+      }
+    }
+
+  function saveNewSpendingInApi(e) {
+    checkFields()
+    e.preventDefault()
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        description: state.description,
+        amount: state.amount,
+        currency: state.currency
+      }),
+    };
+    fetch("/api/new-spending", requestOptions)
+      .then((response) => response.json())
+        .then(setUrl(`http://localhost:8000/api/get-all-spendings`))
+  }
+
+
 
   return (
     <>
@@ -44,7 +69,7 @@ export default function Form() {
           <option value='HUF'>HUF</option>
           <option value='USD'>USD</option>
         </SelectStyles>
-        <InputStyles type='submit' value='Save' />
+        <InputStyles type='submit' value='Save' onClick={saveNewSpendingInApi}/>
       </FormStyles>
     </>
   );
