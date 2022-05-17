@@ -4,7 +4,7 @@ import { SelectStyles } from '../styles/SelectStyles';
 import { FormStyles } from '../styles/ComponentStyles';
 import {render} from "react-dom";
 
-export default function Form({ spendings, setSpendings }) {
+export default function Form({ spendings, setSpendings, setUrl }) {
   const [state, setState] = useState({
     description: '',
     amount: 0,
@@ -32,7 +32,7 @@ export default function Form({ spendings, setSpendings }) {
     };
     fetch("/api/new-spending", requestOptions)
       .then((response) => response.json())
-        .then()
+        .then(setUrl(`http://localhost:8000/api/get-all-spendings`))
   }
 
 

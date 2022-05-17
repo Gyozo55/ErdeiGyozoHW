@@ -1,7 +1,8 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { FiltersWrapper, Orderings, CurrencyFilters, CurrencyButton } from '../styles/ComponentStyles';
 
-export default function CurrencyFilter({ setSpendings }) {
+
+export default function CurrencyFilter({ setSpendings, setUrl }) {
 
   const [orderState, setOrderState] = useState({
     name : '',
@@ -12,54 +13,59 @@ export default function CurrencyFilter({ setSpendings }) {
     name : '',
   });
 
+  useEffect ( ()=>{
+    setUrl(`http://localhost:8000/api/filter-by-currency?filter-type=${filterState}`)
+  }, [filterState])
+
+  useEffect ( ()=>{
+    setUrl(`http://localhost:8000/api/order-spendings?order-type=${orderState.value}&order-name=${orderState.name}`)
+  }, [orderState])
+
   function handleSortingChange(e) {
     setOrderState({
-      name: e.target.name,
+      name: e.title,
       value: e.target.value,
     });
-    getOrderedSpendings()
   }
 
-  async function handleFilterChange(e) {
-    e.preventDefault()
-    console.log(e.target.name)
+  function handleFilterChange(e) {
     setFilterState(e.target.name)
-    console.log(filterState.name)
-    await getFilteredSpendings();
   }
 
-  async function getOrderedSpendings() {
-    console.log(orderState.type)
-    console.log(orderState.name)
-    const url = `/api/order-spendings?order-type=${orderState.value}&order-name=${orderState.name}`
-    await fetchDataFromApiWithGet(url)
-  }
-
-  async function getFilteredSpendings() {
-    console.log(filterState)
-    const url = `/api/filter-by-currency?filter-type${filterState.name}`
-    await fetchDataFromApiWithGet(url)
-  }
-
-  async function fetchDataFromApiWithGet(url){
-    const requestOptions = {
-      method: "GET",
-      headers: { "Content-Type": "application/json" }};
-
-    await fetch(url, requestOptions)
-      .then((response) => response.json())
-        .then(data => setSpendings(data))
-  }
+  // async function getOrderedSpendings() {
+  //   console.log(orderState.type)
+  //   console.log(orderState.name)
+  //   const url = `http://localhost:8000/api/order-spendings?order-type=${orderState.value}&order-name=${orderState.name}`
+  //   setUrl(url)
+  //   // await fetchDataFromApiWithGet(url)
+  // }
+  //
+  // async function getFilteredSpendings() {
+  //   console.log(filterState)
+  //   const url = `http://localhost:8000/api/filter-by-currency?filter-type=${filterState}`
+  //   setUrl(url)
+  //   // await fetchDataFromApiWithGet(url)
+  // }
+  //
+  // async function fetchDataFromApiWithGet(url){
+  //   const requestOptions = {
+  //     method: "GET",
+  //     headers: { "Content-Type": "application/json" }};
+  //
+  //   await fetch(url, requestOptions)
+  //     .then((response) => response.json())
+  //       .then(data => setSpendings(data))
+  // }
 
   return (
     <>
       <FiltersWrapper>
         <Orderings>
           <select onChange={handleSortingChange}>
-            <option name='date' value='DESC'>Sort by Date descending (default)</option>
-            <option name='date' value='ASC'>Sort by Date ascending</option>
-            <option name='amount' value='DESC'>Sort by Amount descending</option>
-            <option name='amount' value='ASC'>Sort by Amount ascending</option>
+            <option title='date' value='DESC'>Sort by Date descending (default)</option>
+            <option title='date' value='ASC'>Sort by Date ascending</option>
+            <option title='amount' value='DESC'>Sort by Amount descending</option>
+            <option title='amount' value='ASC'>Sort by Amount ascending</option>
           </select>
         </Orderings>
         <CurrencyFilters>
