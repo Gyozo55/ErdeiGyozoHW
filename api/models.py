@@ -7,4 +7,6 @@ class SpendingList(models.Model):
     spent_at = models.DateField(auto_now_add=True)
     currency = models.CharField(max_length=15)
 
+    def __str__(self):
+        return self.description
 
