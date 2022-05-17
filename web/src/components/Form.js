@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { InputStyles } from '../styles/InputStyles';
 import { SelectStyles } from '../styles/SelectStyles';
 import { FormStyles } from '../styles/ComponentStyles';
-import {render} from "react-dom";
 
 export default function Form({ setUrl }) {
   const [state, setState] = useState({
@@ -20,10 +19,13 @@ export default function Form({ setUrl }) {
   }
 
   function checkFields() {
-      if(state.description === '' || state.amount === 0){
-        alert('Invalid Input: Please try again!')
-      }
+    if (state.description === '') {
+      alert('Invalid Description: Please try again!')
     }
+    if (state.amount === 0) {
+      alert('Invalid Amount: Please try again!')
+    }
+  }
 
   function saveNewSpendingInApi(e) {
     checkFields()
@@ -39,6 +41,11 @@ export default function Form({ setUrl }) {
     };
     fetch("/api/new-spending", requestOptions)
       .then((response) => response.json())
+        .then(setState({
+            description: '',
+            amount: 0,
+            currency: 'USD',
+        }))
         .then(setUrl(`http://localhost:8000/api/get-all-spendings`))
   }
 
