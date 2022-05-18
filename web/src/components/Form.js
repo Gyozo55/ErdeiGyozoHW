@@ -12,6 +12,7 @@ export default function Form({ setUrl }) {
 
   function handleChange(e) {
     const { name, value } = e.target;
+    console.log(state)
     setState({
       ...state,
       [name]: value,
@@ -30,8 +31,7 @@ export default function Form({ setUrl }) {
     }
   }
 
-  function saveNewSpendingInApi(e) {
-    e.preventDefault()
+  function saveNewSpendingInApi() {
     checkFields()
     const requestOptions = {
       method: "POST",
@@ -51,12 +51,6 @@ export default function Form({ setUrl }) {
             currency: 'USD',
         }))
         .then(setUrl(`http://localhost:8000/api/get-all-spendings`))
-    }else {
-      setState({
-        description: '',
-        amount: 0,
-        currency: 'USD',
-      })
     }
   }
 
